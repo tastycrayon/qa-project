@@ -72,8 +72,8 @@ func UpdateTodo(ctx context.Context, db *sql.DB, id int, title string, isComplet
 	const query = `UPDATE todos SET title = ?, is_complete = ?, updated_at = ? WHERE id = ? RETURNING id, title, is_complete`
 
 	var todo model.Todo
-	row := db.QueryRowContext(ctx, query, title, isComplete, id)
-	err := row.Scan(&todo.ID, &todo.Title, &todo.IsComplete, time.Now())
+	row := db.QueryRowContext(ctx, query, title, isComplete, time.Now(), id)
+	err := row.Scan(&todo.ID, &todo.Title, &todo.IsComplete)
 	if err != nil {
 		return nil, err
 	}

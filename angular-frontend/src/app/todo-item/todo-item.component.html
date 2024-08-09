@@ -1,0 +1,22 @@
+<label class="label cursor-pointer">
+    <span [class.completed]="todo.isComplete">{{idx + 1}}. {{ todo.title }}</span>
+    <span class="flex gap-2 items-center">
+        @if(loadingCbx) {
+        <button disabled class="btn btn-square btn-xs opacity-50">
+            <span class="loading loading-dots loading-xs"></span>
+        </button>
+        } @else {
+        <input [disabled]="loadingBtn || loadingCbx" type="checkbox" class="checkbox" [(checked)]="todo.isComplete"
+            (change)="toggleCompleted(todo)" />
+        }
+        <button [disabled]="loadingBtn || loadingCbx" class="btn btn-square btn-xs" (click)="deleteTodo(todo)">
+            @if(loadingBtn) {
+            <span class="loading loading-dots loading-xs"></span>
+            } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            }
+        </button>
+    </span>
+</label>

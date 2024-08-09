@@ -1,0 +1,28 @@
+<!-- todo-list.component.html -->
+@if(loading) {
+<div>loading</div>
+}
+@if(error) {
+<div>Error</div>
+}
+@if(todoList) {
+<ul class="menu">
+    @for (todo of todoList; track todo.id) {
+    <li class="hover:active">
+        <label class="label cursor-pointer">
+            <span [class.completed]="todo.isComplete">{{$index + 1}}. {{ todo.title }}</span>
+            <span class="flex gap-2 items-center">
+                <input type="checkbox" class="checkbox" [(checked)]="todo.isComplete"
+                    (change)="toggleCompleted(todo.id)" />
+                <button class="btn btn-square btn-xs opacity-50" (change)="deleteTodo(todo.id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </span>
+        </label>
+    </li>
+    }
+</ul>
+}

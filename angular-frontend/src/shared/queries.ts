@@ -20,3 +20,20 @@ mutation ($title: String!) {
     isComplete
   }
 }`;
+
+
+export type UpdateTodoResponse = { updateTodo: Todo };
+export const UPDATE_TODO_MUTATION = gql<UpdateTodoResponse, { id: number, title: string, isComplete: boolean }>`
+mutation ($id:ID!, $title: String!, $isComplete: Boolean!) {
+  updateTodo(input: { id: $id, title: $title, isComplete: $isComplete }){
+    id
+    title
+    isComplete
+  }
+}`;
+
+export type DeleteTodoResponse = { deleteTodo: boolean };
+export const DELETE_TODO_MUTATION = gql<DeleteTodoResponse, { id: number, }>`
+mutation ($id:ID!) {
+  deleteTodo(input: $id )
+}`;

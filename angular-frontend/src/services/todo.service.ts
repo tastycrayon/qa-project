@@ -19,8 +19,9 @@ export class TodoService {
 
   getTodos() {
     return this.apollo.watchQuery({
+      notifyOnNetworkStatusChange: true,
       query: GET_TODOS_QUERY,
-    }).valueChanges;
+    });
   };
 
   createTodo(title: string) {
@@ -42,11 +43,11 @@ export class TodoService {
     return this.apollo.mutate({
       mutation: UPDATE_TODO_MUTATION,
       variables: { ...todo },
-      update: (cache) => {
+      update: (cache, { data }) => {
         const existingTodos = cache.readQuery<GetTodoResponse>({ query: GET_TODOS_QUERY });
-        if (!existingTodos) return;
+        if (!existingTodos || !data?.updateTodo) return;
         const newTodos = existingTodos.todos.map(t => {
-          if (t.id == todo.id) return todo;
+          if (t.id == data.updateTodo.id) return { ...todo };
           return t;
         });
         cache.writeQuery({

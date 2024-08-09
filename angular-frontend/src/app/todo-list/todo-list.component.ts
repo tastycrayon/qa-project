@@ -17,7 +17,7 @@ export class TodoListComponent implements OnInit {
   todoList: Todo[] = [];
   loading = false;
   error: ApolloError | undefined;
-  skeletonList = Array.from(Array(10).keys())
+  skeletonList = Array.from(Array(1 << 4).keys())
 
   constructor(private todoService: TodoService) { }
 
@@ -29,7 +29,11 @@ export class TodoListComponent implements OnInit {
     });
   }
   getTodos() {
-    return this.todoService.getTodos().pipe(shareReplay(1));
+    return this.todoService.getTodos().valueChanges.pipe(shareReplay(1));
+  }
+  refetchTodos() {
+    this.loading = true;
+    return this.todoService.getTodos().refetch();
   }
 
 }

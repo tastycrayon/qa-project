@@ -10,6 +10,7 @@
 <div>Error</div>
 }
 @if(todoList) {
+<button class="btn btn-primary btn-sm my-2" (click)="refetchTodos()">Refresh</button>
 <ul class="menu">
     @for (todo of todoList; track todo.id) {
     <li app-todo-item class="m-1" [todo]="todo" [idx]="$index"></li>

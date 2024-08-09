@@ -6,7 +6,6 @@ package graph
 
 import (
 	"context"
-	"database/sql"
 	"time"
 
 	"github.com/tastycrayon/qa-project/graphql-server/graph/model"
@@ -14,21 +13,30 @@ import (
 
 // CreateTodo is the resolver for the createTodo field.
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	const query = `INSERT INTO todos (title, is_complete) VALUES(?,?)`
-	result, err := r.DB.ExecContext(ctx, query, input.Title, false)
-	if err != nil {
-		return nil, err
-	}
-	id, err := result.LastInsertId()
-	if err != nil {
-		return nil, err
-	}
-	return GetTodoByID(r.DB, int(id))
+	time.Sleep(time.Second * 1)
+
+	return CreateTodo(ctx, r.DB, input.Title)
+}
+
+// UpdateTodo is the resolver for the updateTodo field.
+func (r *mutationResolver) UpdateTodo(ctx context.Context, input model.UpdateTodo) (*model.Todo, error) {
+	time.Sleep(time.Second * 1)
+
+	return UpdateTodo(ctx, r.DB, input.ID, input.Title, input.IsComplete)
+}
+
+// DeleteTodo is the resolver for the deleteTodo field.
+func (r *mutationResolver) DeleteTodo(ctx context.Context, input *int) (bool, error) {
+	time.Sleep(time.Second * 1)
+
+	return DeleteTodo(ctx, r.DB, *input)
 }
 
 // Todos is the resolver for the todos field.
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	return GetTodos(r.DB)
+	time.Sleep(time.Second * 1)
+
+	return GetTodos(ctx, r.DB)
 }
 
 // Mutation returns MutationResolver implementation.
@@ -39,44 +47,3 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//     it when you're done.
-//   - You have helper methods in this file. Move them out to keep these resolver files clean.
-func GetTodoByID(db *sql.DB, id int) (*model.Todo, error) {
-	ctx := context.Background()
-	const query = `SELECT id, title, is_complete FROM todos WHERE ID=?`
-
-	row := db.QueryRowContext(ctx, query, id)
-	var todo model.Todo
-	err := row.Scan(&todo.ID, &todo.Title, &todo.IsComplete)
-	if err != nil {
-		return nil, err
-	}
-	return &todo, nil
-}
-func GetTodos(db *sql.DB) ([]*model.Todo, error) {
-	time.Sleep(time.Second * 3)
-	ctx := context.Background()
-	const query = `SELECT id, title, is_complete FROM todos`
-
-	var todos []*model.Todo
-	rows, err := db.QueryContext(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	// rest of the function
-	for rows.Next() {
-		var todo model.Todo
-		err := rows.Scan(&todo.ID, &todo.Title, &todo.IsComplete)
-		if err != nil {
-			return nil, err
-		}
-		todos = append(todos, &todo)
-	}
-	return todos, err
-}

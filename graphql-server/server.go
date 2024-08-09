@@ -21,9 +21,11 @@ func main() {
 	if err := CreateTables(db); err != nil {
 		panic(err)
 	}
-	// if err := SeedTodo(db); err != nil {
-	// 	panic(err)
-	// }
+	if len(os.Args) > 1 && os.Args[1] == "seed" {
+		if err := SeedTodo(db); err != nil {
+			panic(err)
+		}
+	}
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort

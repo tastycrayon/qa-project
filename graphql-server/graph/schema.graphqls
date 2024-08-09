@@ -16,6 +16,16 @@ input NewTodo {
   title: String!
 }
 
+input UpdateTodo {
+  id: ID!
+  title: String!
+  isComplete: Boolean!
+}
+
 type Mutation {
   createTodo(input: NewTodo!): Todo!
+
+  updateTodo(input: UpdateTodo!): Todo!
+
+  deleteTodo(input: ID!): Boolean!
 }

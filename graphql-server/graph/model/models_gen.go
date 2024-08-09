@@ -13,7 +13,13 @@ type Query struct {
 }
 
 type Todo struct {
-	ID         string `json:"id"`
+	ID         int    `json:"id"`
+	Title      string `json:"title"`
+	IsComplete bool   `json:"isComplete"`
+}
+
+type UpdateTodo struct {
+	ID         int    `json:"id"`
 	Title      string `json:"title"`
 	IsComplete bool   `json:"isComplete"`
 }

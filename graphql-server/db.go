@@ -13,8 +13,8 @@ const table_schema = `
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title VARCHAR(255),
     is_complete BOOLEAN,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );`
 
 func InitDatabase() (*sql.DB, error) {

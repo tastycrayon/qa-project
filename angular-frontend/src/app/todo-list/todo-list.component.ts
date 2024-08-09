@@ -3,11 +3,13 @@ import { ApolloError } from '@apollo/client/core';
 import { Todo } from '../../shared/models/todo';
 import { TodoService } from '../../services/todo.service';
 import { map, pluck, shareReplay } from 'rxjs';
+import { TodoItemComponent } from '../todo-item/todo-item.component';
+import { TodoItemSkeletonComponent } from '../todo-item-skeleton/todo-item-skeleton.component';
 
 @Component({
   selector: 'app-todo-list',
   standalone: true,
-  imports: [],
+  imports: [TodoItemComponent, TodoItemSkeletonComponent],
   templateUrl: './todo-list.component.html',
   styleUrl: './todo-list.component.scss'
 })
@@ -15,6 +17,7 @@ export class TodoListComponent implements OnInit {
   todoList: Todo[] = [];
   loading = false;
   error: ApolloError | undefined;
+  skeletonList = Array.from(Array(10).keys())
 
   constructor(private todoService: TodoService) { }
 
@@ -28,6 +31,5 @@ export class TodoListComponent implements OnInit {
   getTodos() {
     return this.todoService.getTodos().pipe(shareReplay(1));
   }
-  toggleCompleted(id: number) { }
-  deleteTodo(todo: any) { }
+
 }
